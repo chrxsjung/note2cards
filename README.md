@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+yooo
 
-## Getting Started
+note taking app with AI summary and flash cards 
 
-First, run the development server:
+i wanna make folders for each class and notes inside. 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+supabase foreign key for note to be linked to one folder id.
+
+i wanna finish this before school starts so i can lowk use it 
+
+tech:
+
+folder grid component with individual folder card
+
+open folder card
+
+notes grid with individual note card
+
+
+so if showEditor state is yes (meaing button is pressed) then we call CreateNoteForm which is responsible for displaying the text editor which cals RichTextEditor which is soley responsible for actually making the text editor  ...
+
+
+# 📝 Rich Text Note Creation Flow
+
+This document explains how rich text note creation works inside the `note2cards` app.
+
+---
+
+## 🔁 Component Flow
+
+The following flow is used when a user wants to create a new note inside a folder:
+
+```txt
+User clicks "Create Note" button
+→ showEditor state becomes true in FolderPageClient
+→ CreateNoteForm component is rendered
+→ RichTextEditor component (Tiptap) is mounted inside CreateNoteForm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧩 Component Breakdown
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. `FolderPageClient.tsx`
+- Controls the visibility of the `CreateNoteForm` using the `showEditor` state.
+- Displays the "Create Note" button.
 
-## Learn More
+```tsx
+const [showEditor, setShowEditor] = useState(false);
 
-To learn more about Next.js, take a look at the following resources:
+{showEditor && (
+  <CreateNoteForm
+    folderId={folder.id}
+    onCancel={() => setShowEditor(false)}
+  />
+)}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. `CreateNoteForm.tsx`
+- Handles the UI for creating a new note.
+- Accepts the `folderId` and `onCancel` props.
+- Renders an input for the note title.
+- Mounts the `RichTextEditor` for the content.
+- On submission, calls the `createNote(title, content, folderId)` server action.
+- Refreshes the page and closes the editor.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. `RichTextEditor.tsx`
+- This is the Tiptap-powered rich text editor.
+- Accepts `content` and `onChange` props.
+- Uses `useEditor()` from Tiptap with `StarterKit` extension.
+- Handles SSR issues with `immediatelyRender: false`.
 
-## Deploy on Vercel
+```tsx
+const editor = useEditor({
+  extensions: [StarterKit],
+  content,
+  onUpdate({ editor }) {
+    onChange(editor.getHTML());
+  },
+  immediatelyRender: false, // prevents SSR hydration mismatch
+});
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+✅ Make sure this file uses `"use client"` since it uses hooks.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ✅ Summary
+
+This structure separates logic cleanly:
+
+- `FolderPageClient` → controls whether to show the form.
+- `CreateNoteForm` → handles form state and submission.
+- `RichTextEditor` → renders the WYSIWYG editor.
+
+> This modular design keeps your logic clean and easy to maintain.
