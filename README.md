@@ -20,13 +20,13 @@ notes grid with individual note card
 so if showEditor state is yes (meaing button is pressed) then we call CreateNoteForm which is responsible for displaying the text editor which cals RichTextEditor which is soley responsible for actually making the text editor  ...
 
 
-# 📝 Rich Text Note Creation Flow
+# Rich Text Note Creation Flow
 
 This document explains how rich text note creation works inside the `note2cards` app.
 
 ---
 
-## 🔁 Component Flow
+## Component Flow
 
 The following flow is used when a user wants to create a new note inside a folder:
 
@@ -39,7 +39,7 @@ User clicks "Create Note" button
 
 ---
 
-## 🧩 Component Breakdown
+## Component Breakdown
 
 ### 1. `FolderPageClient.tsx`
 - Controls the visibility of the `CreateNoteForm` using the `showEditor` state.
@@ -85,7 +85,7 @@ const editor = useEditor({
 
 ---
 
-## ✅ Summary
+## Summary
 
 This structure separates logic cleanly:
 
