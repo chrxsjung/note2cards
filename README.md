@@ -21,9 +21,6 @@ so if showEditor state is yes (meaing button is pressed) then we call CreateNote
 
 
 # Rich Text Note Creation Flow
-
-This document explains how rich text note creation works inside the `note2cards` app.
-
 ---
 
 ## Component Flow
