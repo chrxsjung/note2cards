@@ -21,7 +21,7 @@ so if showEditor state is yes (meaing button is pressed) then we call CreateNote
 
 
 # Rich Text Note Creation Flow
----
+
 
 ## Component Flow
 
