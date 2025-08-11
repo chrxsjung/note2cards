@@ -91,6 +91,5 @@ This structure separates logic cleanly:
 
 - `FolderPageClient` → controls whether to show the form.
 - `CreateNoteForm` → handles form state and submission.
-- `RichTextEditor` → renders the WYSIWYG editor.
+- `RichTextEditor` → renders the editor.
 
-> This modular design keeps your logic clean and easy to maintain.
