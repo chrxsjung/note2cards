@@ -5,6 +5,30 @@ import { handleLogin } from "./actions";
 import { useState, useActionState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useFormStatus } from "react-dom";
+import Spinner from "@/components/ui/Spinner";
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-48 md:w-72 px-5 py-3 rounded-md text-lg font-medium
+        bg-white text-black hover:bg-gray-200 flex items-center justify-center gap-2
+        disabled:opacity-70 disabled:cursor-not-allowed"
+    >
+      {pending ? (
+        <>
+          <Spinner size={20} />
+          Logging in...
+        </>
+      ) : (
+        "Log In"
+      )}
+    </button>
+  );
+}
 
 export default function LoginPage() {
   const [state, formAction] = useActionState(handleLogin, { error: "" });
@@ -42,12 +66,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-48 md:w-72 bg-white text-black px-5 py-3 rounded-md hover:bg-gray-200 text-lg font-medium hover:cursor-pointer"
-        >
-          Log In
-        </button>
+        <SubmitButton />
 
         <p className="text-white-500">
           Don't have an account?{" "}

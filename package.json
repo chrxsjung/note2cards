@@ -19,6 +19,7 @@
     "@tiptap/extension-text-style": "^3.0.9",
     "@tiptap/react": "^3.0.9",
     "@tiptap/starter-kit": "^3.0.9",
+    "framer-motion": "^12.23.12",
     "lucide-react": "^0.536.0",
     "next": "15.4.5",
     "react": "19.1.0",

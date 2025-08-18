@@ -2,9 +2,11 @@
 
 import FolderCard from "@/components/folder/Folder";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { fetchFolders } from "@/lib/folders/fetchFolders";
 import { createFolder } from "@/lib/folders/createFolder";
+import { deleteFolder } from "@/lib/folders/deleteFolder";
 import { Folder } from "@/types";
 
 export default function FolderList({ folders }: { folders: Folder[] }) {
@@ -12,13 +14,24 @@ export default function FolderList({ folders }: { folders: Folder[] }) {
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");
   const [allFolders, setAllFolders] = useState(folders);
+  const router = useRouter();
 
   async function handleCreateFolder(name: string, desc: string) {
+    if (!name.trim()) {
+      return; // Don't create folder if name is empty or only whitespace
+    }
     await createFolder(name, desc); // server action to save to db
-    const updated = await fetchFolders(); // server action to refetch
-    setAllFolders(updated); // update the folder
+    router.refresh(); // efficient revalidation like notes
     setFolderName(""); // clear input
     setIsCreatingFolder(false); // close the form
+  }
+
+  async function handleDeleteFolder(folderId: string) {
+    // Optimistic update - remove from UI immediately
+    setAllFolders((prev) => prev.filter((folder) => folder.id !== folderId));
+
+    // Delete from database
+    await deleteFolder(folderId);
   }
   if (isCreatingFolder) {
     return (
@@ -50,10 +63,15 @@ export default function FolderList({ folders }: { folders: Folder[] }) {
                 Cancel
               </button>
               <button
-                className="bg-blue-600 text-white font-bold px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                className={`font-bold px-4 py-2 rounded-md transition ${
+                  folderName.trim()
+                    ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
                 onClick={() =>
                   handleCreateFolder(folderName, folderDescription)
                 }
+                disabled={!folderName.trim()}
               >
                 Create
               </button>
@@ -97,7 +115,11 @@ export default function FolderList({ folders }: { folders: Folder[] }) {
       {/* folder grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 h-40 mt-10">
         {allFolders.map((folder) => (
-          <FolderCard key={folder.id} folder={folder} />
+          <FolderCard
+            key={folder.id}
+            folder={folder}
+            onDelete={handleDeleteFolder}
+          />
         ))}
       </div>
     </div>

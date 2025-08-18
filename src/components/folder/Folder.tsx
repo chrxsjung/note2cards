@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { Folder } from "@/types";
 
-export default function FolderCard({ folder }: { folder: Folder }) {
+export default function FolderCard({
+  folder,
+  onDelete,
+}: {
+  folder: Folder;
+  onDelete: (folderId: string) => Promise<void>;
+}) {
   return (
     <div className="p-4 border rounded-lg shadow flex flex-col justify-between">
       <div className="flex flex-col gap-1">
@@ -18,7 +24,18 @@ export default function FolderCard({ folder }: { folder: Folder }) {
         >
           Open
         </Link>
-        <button className="bg-red-600 text-white font-bold px-4 py-2 rounded-md hover:bg-red-700 transition cursor-pointer flex items-center gap-2">
+        <button
+          onClick={async () => {
+            if (
+              window.confirm(
+                "Are you sure you want to delete this folder? This cannot be undone and all notes in this folder will be deleted. FOREVER!!!"
+              )
+            ) {
+              await onDelete(folder.id);
+            }
+          }}
+          className="bg-red-600 text-white font-bold px-4 py-2 rounded-md hover:bg-red-700 transition cursor-pointer flex items-center gap-2"
+        >
           Delete
         </button>
       </div>

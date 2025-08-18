@@ -21,6 +21,10 @@ export default function CreateNoteForm({ folderId, onCancel, note }: Props) {
   const router = useRouter();
 
   const handleSubmit = async () => {
+    if (!title.trim()) {
+      return; // Don't create/update note if title is empty or only whitespace
+    }
+
     if (note) {
       await updateNote(note.id, title, content); // editing
     } else {
@@ -49,7 +53,12 @@ export default function CreateNoteForm({ folderId, onCancel, note }: Props) {
         </button>
         <button
           onClick={handleSubmit}
-          className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+          className={`px-4 py-2 rounded transition ${
+            title.trim()
+              ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+              : "bg-gray-400 text-gray-200 cursor-not-allowed"
+          }`}
+          disabled={!title.trim()}
         >
           {note ? "Update Note" : "Save Note"}
         </button>

@@ -1,9 +1,10 @@
 "use client";
 
-import { Pencil } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import CreateNoteForm from "./CreateNoteForm";
 import { Note } from "@/types";
+import { deleteNote } from "@/lib/folders/deleteNote";
 
 export default function NoteCard({ note }: { note: Note }) {
   const [showEditor, setShowEditor] = useState(false);
@@ -16,13 +17,30 @@ export default function NoteCard({ note }: { note: Note }) {
         </div>
 
         <div className="text-sm text-gray-400 mt-4 flex justify-between items-center">
-          <span>Created at: {new Date(note.created_at).toLocaleDateString()}</span>
+          <span>
+            Created at: {new Date(note.created_at).toLocaleDateString()}
+          </span>
+
           <button
-            className="bg-blue-600 text-white font-bold px-4 py-2 rounded-md hover:bg-blue-700 transition cursor-pointer flex items-center gap-2"
+            className="w-20 bg-blue-600 text-white font-bold px-4 py-2 rounded-md hover:bg-blue-700 transition cursor-pointer flex items-center justify-center gap-2"
             onClick={() => setShowEditor(true)}
           >
             <span>Edit</span>
             <Pencil size={20} />
+          </button>
+
+          <button
+            className="w-28 bg-red-600 text-white font-bold px-4 py-2 rounded-md hover:bg-red-700 transition cursor-pointer flex items-center justify-center gap-2"
+            onClick={() => {
+              if (
+                window.confirm("Are you sure you want to delete this note?")
+              ) {
+                deleteNote(note.id);
+              }
+            }}
+          >
+            <span>Delete</span>
+            <Trash size={20} />
           </button>
         </div>
       </div>
