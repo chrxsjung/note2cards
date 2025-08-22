@@ -3,9 +3,11 @@ import { Note } from "@/types";
 
 export default function NotesList({ notes }: { notes: Note[] }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 h-40">
+    <div className="flex flex-wrap gap-6">
       {notes.map((note) => (
-        <NoteCard key={note.id} note={note} />
+        <div key={note.id} className="w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(33.333%-1rem)]">
+          <NoteCard note={note} />
+        </div>
       ))}
     </div>
   );

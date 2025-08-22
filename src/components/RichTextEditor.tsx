@@ -78,7 +78,7 @@ export default function RichTextEditor({
 
   return (
     <div
-      className="border border-black bg-white text-black rounded-xl shadow-sm p-6 min-h-[650px] w-full cursor-text "
+      className="border border-black bg-white text-black rounded-xl shadow-sm p-6 h-[650px] w-full cursor-text overflow-y-auto"
       onClick={() => editor.commands.focus()}
     >
       {/* === Toolbar === */}
