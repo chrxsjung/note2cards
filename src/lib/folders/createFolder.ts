@@ -9,7 +9,16 @@ export async function createFolder(name: string, desc: string) {
     cookies: () => cookies(),
   });
 
-  const { data, error } = await supabase.from("folders").insert({ name, desc });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) throw new Error("Not authenticated");
+
+  const { data, error } = await supabase.from("folders").insert({
+    name,
+    desc,
+    user_id: session.user.id,
+  });
 
   if (error) {
     throw new Error(error.message);

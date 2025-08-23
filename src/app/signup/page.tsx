@@ -1,40 +1,36 @@
-//set up signup page
-
 "use client";
 import { useRef, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { handleSignup } from "./actions";
 
 export default function Signup() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //use refs to get values from input fields
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
+
     if (!email || !password) {
       setError("Please fill in all fields");
       return;
     }
 
-    //sign up user with supabase
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
 
-    if (error) {
-      setError(error.message);
+    const result = await handleSignup(null, formData);
+
+    if (result?.error) {
+      setError(result.error);
     } else {
       setSuccess(true);
-      //if good, redirect to home page which i didnt make yet lol
     }
   };
 
@@ -53,7 +49,7 @@ export default function Signup() {
         </div>
       ) : (
         <form
-          onSubmit={handleSignup}
+          onSubmit={handleSubmit}
           className="flex flex-col gap-6 p-4 items-center justify-center"
         >
           <input
