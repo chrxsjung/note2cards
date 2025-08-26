@@ -69,7 +69,7 @@ export default function LoginPage() {
         <SubmitButton />
 
         <p className="text-white-500">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="underline hover:text-gray-400">
             Sign Up
           </Link>
